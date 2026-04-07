@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedro Lucas — Ciência da Computação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #16161f;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --accent: #4ade80;
+    --accent2: #818cf8;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2.5rem;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  /* Sections */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+  }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 8rem;
+  }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.1s;
+  }
+
+  h1 {
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  h1 span { color: var(--accent2); }
+
+  .hero-desc {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.35s;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.5s;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.65rem 1.4rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0f;
+    font-weight: 500;
+  }
+
+  .btn-primary:hover { background: #6ee7a0; transform: translateY(-1px); }
+
+  .btn-ghost {
+    color: var(--text);
+    border: 1px solid var(--border);
+    background: transparent;
+  }
+
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: var(--bg3); }
+
+  /* Section headers */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: 3rem;
+    color: var(--text);
+  }
+
+  /* About */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+    font-size: 0.95rem;
+    line-height: 1.9;
+  }
+
+  .about-text p strong {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .about-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .fact {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .fact-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .fact-value {
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .skill-tag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+
+  .skill-tag:hover {
+    border-color: rgba(74, 222, 128, 0.3);
+    color: var(--text);
+    background: var(--bg3);
+  }
+
+  .skill-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .skill-dot.purple { background: var(--accent2); }
+  .skill-dot.gray { background: var(--muted); }
+
+  /* Projects */
+  .projects-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 1.5rem;
+    padding: 1.75rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+    transform-origin: bottom;
+  }
+
+  .project-card:hover::before { transform: scaleY(1); }
+  .project-card:hover { border-color: rgba(74,222,128,0.2); transform: translateX(4px); }
+
+  .project-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .project-title {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .project-desc {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(129,140,248,0.1);
+    color: var(--accent2);
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .tag.green {
+    background: rgba(74,222,128,0.1);
+    color: var(--accent);
+  }
+
+  .project-arrow {
+    font-size: 1.2rem;
+    color: var(--muted);
+    transition: color 0.2s;
+    margin-top: 4px;
+  }
+
+  .project-card:hover .project-arrow { color: var(--accent); }
+
+  /* Contact */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1.25rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .contact-link:hover {
+    border-color: rgba(74,222,128,0.3);
+    background: var(--bg3);
+  }
+
+  .contact-icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .contact-info { display: flex; flex-direction: column; }
+
+  .contact-platform {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+  }
+
+  .contact-handle {
+    font-size: 0.875rem;
+    color: var(--text);
+  }
+
+  /* Divider */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    margin: 0 auto;
+    max-width: 860px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2.5rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 1.25rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    h1 { font-size: 2.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#hero">pedro_lucas.dev</a>
+  <ul class="nav-links">
+    <li><a href="#about">sobre</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#projects">projetos</a></li>
+    <li><a href="#contact">contato</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-tag">// estudante de cc · uff · niterói</p>
+  <h1>Pedro Lucas<br><span>Almeida dos Santos</span></h1>
+  <p class="hero-desc">
+    Estudante de Ciência da Computação apaixonado por análise de dados,
+    automação e desenvolvimento de software. Construo projetos que transformam
+    dados públicos em decisões reais.
+  </p>
+  <div class="hero-links">
+    <a href="#projects" class="btn btn-primary">ver projetos</a>
+    <a href="https://github.com/Gurkan22" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+    <a href="https://linkedin.com/in/pe-almeida" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label fade-in">// 01 — sobre mim</p>
+  <h2 class="fade-in">Quem sou eu</h2>
+  <div class="about-grid fade-in">
+    <div class="about-text">
+      <p>
+        Estudante de <strong>Ciência da Computação na UFF</strong> com interesse em análise de dados,
+        desenvolvimento de software e resolução de problemas reais com tecnologia.
+      </p>
+      <p>
+        Tenho experiência prática com <strong>Python</strong> em projetos variados — automação,
+        web scraping, machine learning e visualização de dados.
+      </p>
+      <p>
+        Faço parte da equipe de robótica <strong>ASIMUFF</strong>, onde participei de competições
+        como a IRON CUP e a RIO INNOVATION WEEK com um robô seguidor de linha em Arduino.
+      </p>
+      <p>
+        Busco um estágio onde possa contribuir com projetos que unam análise de dados
+        e desenvolvimento, crescendo junto com uma equipe que valoriza dados como
+        ferramenta de decisão.
+      </p>
+    </div>
+    <div class="about-facts">
+      <div class="fact">
+        <span class="fact-label">FORMAÇÃO</span>
+        <span class="fact-value">CC · UFF · 6º período</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">LOCALIZAÇÃO</span>
+        <span class="fact-value">Maricá, Rio de Janeiro</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">STATUS</span>
+        <span class="fact-value" style="color: var(--accent);">● aberto a estágios</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">INGLÊS</span>
+        <span class="fact-value">Leitura avançada · Escrita intermediária</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">E-MAIL</span>
+        <span class="fact-value"><a href="mailto:pe_almeida@id.uff.br" style="color: var(--accent2); text-decoration: none;">pe_almeida@id.uff.br</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label fade-in">// 02 — tecnologias</p>
+  <h2 class="fade-in">O que eu uso</h2>
+  <div class="skills-grid fade-in">
+    <div class="skill-tag"><div class="skill-dot"></div>Python</div>
+    <div class="skill-tag"><div class="skill-dot"></div>Pandas</div>
+    <div class="skill-tag"><div class="skill-dot"></div>Scikit-learn</div>
+    <div class="skill-tag"><div class="skill-dot"></div>Folium</div>
+    <div class="skill-tag"><div class="skill-dot"></div>Geopandas</div>
+    <div class="skill-tag"><div class="skill-dot"></div>Jupyter</div>
+    <div class="skill-tag"><div class="skill-dot purple"></div>Flask</div>
+    <div class="skill-tag"><div class="skill-dot purple"></div>JavaScript</div>
+    <div class="skill-tag"><div class="skill-dot purple"></div>HTML/CSS</div>
+    <div class="skill-tag"><div class="skill-dot purple"></div>Java</div>
+    <div class="skill-tag"><div class="skill-dot purple"></div>C / C#</div>
+    <div class="skill-tag"><div class="skill-dot purple"></div>Flutter</div>
+    <div class="skill-tag"><div class="skill-dot gray"></div>UiPath</div>
+    <div class="skill-tag"><div class="skill-dot gray"></div>Arduino</div>
+    <div class="skill-tag"><div class="skill-dot gray"></div>MySQL</div>
+    <div class="skill-tag"><div class="skill-dot gray"></div>Git</div>
+    <div class="skill-tag"><div class="skill-dot gray"></div>Unity</div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label fade-in">// 03 — projetos</p>
+  <h2 class="fade-in">O que eu construí</h2>
+  <div class="projects-grid">
+
+    <a href="https://github.com/Gurkan22/niteroi-acidentes" target="_blank" class="project-card fade-in">
+      <div>
+        <p class="project-num">01 — análise de dados · geoespacial</p>
+        <h3 class="project-title">Análise de Acidentes de Trânsito — Niterói/RJ</h3>
+        <p class="project-desc">
+          Análise de dados públicos da PRF com pipeline completo: limpeza, EDA, mapas
+          interativos com Folium e classificador de severidade com Random Forest.
+        </p>
+        <div class="project-tags">
+          <span class="tag green">Python</span>
+          <span class="tag green">Pandas</span>
+          <span class="tag green">Folium</span>
+          <span class="tag green">Scikit-learn</span>
+          <span class="tag green">Geopandas</span>
+        </div>
+      </div>
+      <span class="project-arrow">↗</span>
+    </a>
+
+    <a href="https://github.com/Gurkan22/Web-Scraping-OLX" target="_blank" class="project-card fade-in">
+      <div>
+        <p class="project-num">02 — automação · rpa</p>
+        <h3 class="project-title">Web Scraping de Anúncios — OLX</h3>
+        <p class="project-desc">
+          Bot de automação para coleta de anúncios da OLX com UiPath Studio. Extrai,
+          trata e organiza dados de mercado de forma automatizada.
+        </p>
+        <div class="project-tags">
+          <span class="tag">UiPath</span>
+          <span class="tag">RPA</span>
+          <span class="tag">Web Scraping</span>
+          <span class="tag">Automação</span>
+        </div>
+      </div>
+      <span class="project-arrow">↗</span>
+    </a>
+
+    <a href="https://github.com/GabiCasini/War-G5" target="_blank" class="project-card fade-in">
+      <div>
+        <p class="project-num">03 — engenharia de software · equipe</p>
+        <h3 class="project-title">Jogo War — Engenharia de Software 2</h3>
+        <p class="project-desc">
+          Desenvolvimento completo do jogo War em equipe de 8 pessoas na UFF.
+          244 commits, testes com pytest, CI/CD com GitHub Actions e integração com UiPath.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Flask</span>
+          <span class="tag">pytest</span>
+          <span class="tag">GitHub Actions</span>
+          <span class="tag">CI/CD</span>
+        </div>
+      </div>
+      <span class="project-arrow">↗</span>
+    </a>
+
+    <a href="https://github.com/Gurkan22/The-Game-Awards-APP" target="_blank" class="project-card fade-in">
+      <div>
+        <p class="project-num">04 — app mobile · dispositivos móveis</p>
+        <h3 class="project-title">The Game Awards — App Mobile</h3>
+        <p class="project-desc">
+          Aplicativo Flutter de votação interativa para o The Game Awards, desenvolvido
+          em equipe como trabalho final da disciplina de Dispositivos Móveis na UFF.
+          Sistema completo com autenticação, painel administrativo e banco de dados SQLite.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Flutter</span>
+          <span class="tag">Dart</span>
+          <span class="tag">SQLite</span>
+          <span class="tag">Material Design</span>
+        </div>
+      </div>
+      <span class="project-arrow">↗</span>
+    </a>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label fade-in">// 04 — contato</p>
+  <h2 class="fade-in">Vamos conversar</h2>
+  <div class="contact-grid fade-in">
+    <a href="mailto:pe_almeida@id.uff.br" class="contact-link">
+      <div class="contact-icon">✉</div>
+      <div class="contact-info">
+        <span class="contact-platform">E-MAIL</span>
+        <span class="contact-handle">pe_almeida@id.uff.br</span>
+      </div>
+    </a>
+    <a href="https://linkedin.com/in/pe-almeida" target="_blank" class="contact-link">
+      <div class="contact-icon">in</div>
+      <div class="contact-info">
+        <span class="contact-platform">LINKEDIN</span>
+        <span class="contact-handle">pe-almeida</span>
+      </div>
+    </a>
+    <a href="https://github.com/Gurkan22" target="_blank" class="contact-link">
+      <div class="contact-icon" style="font-size:18px;">⌥</div>
+      <div class="contact-info">
+        <span class="contact-platform">GITHUB</span>
+        <span class="contact-handle">Gurkan22</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  pedro lucas almeida dos santos · feito com html/css · <span id="year"></span>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const els = document.querySelectorAll('.fade-in');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  els.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
